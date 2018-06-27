@@ -32,7 +32,8 @@ class PW_CMB2_Field_Google_Maps {
 	 * Render field
 	 */
 	public function render_pw_map( $field, $field_escaped_value, $field_object_id, $field_object_type, $field_type_object ) {
-		$this->setup_admin_scripts();
+		$key = $field->args('api_key') ?: false;
+		$this->setup_admin_scripts($key);
 
 		echo '<input type="text" class="large-text pw-map-search" id="' . $field->args( 'id' ) . '" />';
 
@@ -76,8 +77,8 @@ class PW_CMB2_Field_Google_Maps {
 	/**
 	 * Enqueue scripts and styles
 	 */
-	public function setup_admin_scripts() {
-		wp_register_script( 'pw-google-maps-api', '//maps.googleapis.com/maps/api/js?libraries=places', null, null );
+	public function setup_admin_scripts($api_key = '') {
+		wp_register_script( 'pw-google-maps-api', '//maps.googleapis.com/maps/api/js?libraries=places'.($api_key ? "&key=$api_key" : ''), null, null );
 		wp_enqueue_script( 'pw-google-maps', plugins_url( 'js/script.js', __FILE__ ), array( 'pw-google-maps-api' ), self::VERSION );
 		wp_enqueue_style( 'pw-google-maps', plugins_url( 'css/style.css', __FILE__ ), array(), self::VERSION );
 	}
